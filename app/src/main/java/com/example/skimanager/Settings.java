@@ -1,3 +1,5 @@
+// This class is responsible for changing password
+
 package com.example.skimanager;
 
 import android.os.Bundle;
@@ -24,6 +26,7 @@ public class Settings extends AppCompatActivity {
         btn_change.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Updating new password to the database
                 String oldPassword = Base64.encodeToString(txt_oldPassword.getText().toString().getBytes(), Base64.DEFAULT);
                 String newPassword = Base64.encodeToString(txt_newPassword.getText().toString().getBytes(), Base64.DEFAULT);
                 String type="password_change";

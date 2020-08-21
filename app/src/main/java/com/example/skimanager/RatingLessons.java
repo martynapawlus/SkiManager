@@ -1,3 +1,5 @@
+// This class is responsible for rating past lessons
+
 package com.example.skimanager;
 
 import android.os.Bundle;
@@ -27,26 +29,11 @@ public class RatingLessons extends AppCompatActivity {
     private ArrayList<String> lessons = new ArrayList<>();
     private ArrayList<Integer> newPosition = new ArrayList<>();
 
-    public void refresh(){
-        String type="lesson_info";
-        BackgroundTask backgroundTask= new BackgroundTask(getApplicationContext());
-        backgroundTask.execute(type, Login.getEmail1());
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        lessons.clear();
-        for(int i = 0; i < data_lesson[0].length; i++){
-            String lesson = "Instruktor: " + data_lesson[0][i] + " , " + data_lesson[4][i] + ":00" + " " + data_lesson[3][i] + ".0" + data_lesson[2][i] + "." + data_lesson[1][i];
-            lessons.add(lesson);
-        }
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rating_lessons);
+        // Connecting to php file in order to get information about past lessons
         String type="lesson_info";
         BackgroundTask backgroundTask= new BackgroundTask(getApplicationContext());
         backgroundTask.execute(type, Login.getEmail1());
@@ -61,6 +48,7 @@ public class RatingLessons extends AppCompatActivity {
         ratingBar = findViewById(R.id.ratingBar);
         data_lesson = backgroundTask.getData_lesson();
 
+        // Creating readable date including 0 before first to 9th day of month
         for(int i = 0; i < data_lesson[0].length; i++){
             String compareDate;
             if(Integer.parseInt(data_lesson[3][i]) < 10) {
@@ -76,6 +64,8 @@ public class RatingLessons extends AppCompatActivity {
                     compareDate = data_lesson[3][i] + "." + data_lesson[2][i] + "." + data_lesson[1][i];
                 }
             }
+
+            // Comparing today's date and date of lesson
             Date date = Calendar.getInstance().getTime();
             DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
             String now = dateFormat.format(date);
@@ -106,6 +96,7 @@ public class RatingLessons extends AppCompatActivity {
                 }
             });
         } else {
+            // If there are past lessons that aren't rated yet
             spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -126,6 +117,7 @@ public class RatingLessons extends AppCompatActivity {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Updating the rate of past lesson
                 String type1="lesson_rate";
                 BackgroundTask backgroundTask= new BackgroundTask(getApplicationContext());
                 backgroundTask.execute(type1, Login.getEmail1(), tmp_instructor, tmp_year, tmp_month, tmp_day, tmp_hour, Float.toString(ratingBar.getRating()));

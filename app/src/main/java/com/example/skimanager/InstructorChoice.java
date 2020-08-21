@@ -1,3 +1,5 @@
+// This class is responsible for choosing name of instructor and the date when the lesson will be taken
+
 package com.example.skimanager;
 
 import android.content.Intent;
@@ -58,6 +60,7 @@ public class InstructorChoice extends AppCompatActivity {
         calendarView = (CalendarView) findViewById(R.id.calendarView);
         button = findViewById(R.id.btn_zatwierdz);
         ArrayList<String> instructors = new ArrayList<String>();
+        // Instructors names
         instructors.add("Anna");
         instructors.add("Dominika");
         instructors.add("Mateusz");
@@ -69,6 +72,7 @@ public class InstructorChoice extends AppCompatActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                // Selected instructor
                 tmp_instructor = parent.getItemAtPosition(position).toString();
             }
 
@@ -80,6 +84,7 @@ public class InstructorChoice extends AppCompatActivity {
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
+                // Selected date
                 tmp_year= String.valueOf(year);
                 tmp_month=String.valueOf(month+1);
                 tmp_day=String.valueOf(dayOfMonth);
@@ -90,6 +95,7 @@ public class InstructorChoice extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Connecting to the server and confirming date and instructor
                 String type="instructor";
                 BackgroundTask backgroundTask= new BackgroundTask(getApplicationContext());
                 backgroundTask.execute(type, tmp_instructor, tmp_year, tmp_month, tmp_day);

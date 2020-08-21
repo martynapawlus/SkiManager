@@ -1,3 +1,5 @@
+// This class is responsible for logging into users account
+
 package com.example.skimanager;
 
 import android.content.Intent;
@@ -11,8 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class Login extends AppCompatActivity {
     private static String email1;
-    Button btn_login, btn_rejestracja;
-    EditText txt_haslo_login, txt_email_login;
+    Button btn_login, btn_registration;
+    EditText txt_passwd_login, txt_email_login;
 
     public static String getEmail1() {
         return email1;
@@ -24,22 +26,24 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         btn_login=findViewById(R.id.btn_login);
         txt_email_login=findViewById(R.id._txt_email_login);
-        txt_haslo_login=findViewById(R.id._txt_haslo_login);
-        btn_rejestracja=findViewById(R.id.btn_rejestracja);
+        txt_passwd_login=findViewById(R.id._txt_haslo_login);
+        btn_registration=findViewById(R.id.btn_rejestracja);
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String email=txt_email_login.getText().toString();
-                String haslo = Base64.encodeToString(txt_haslo_login.getText().toString().getBytes(), Base64.DEFAULT);
-                System.out.println(haslo);
+                String password = Base64.encodeToString(txt_passwd_login.getText().toString().getBytes(), Base64.DEFAULT);
+                System.out.println(password);
                 String type="login";
+                // Connecting to the database and checking whether email and password are correct
                 BackgroundTask backgroundTask= new BackgroundTask(getApplicationContext());
-                backgroundTask.execute(type, email, haslo);
+                backgroundTask.execute(type, email, password);
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                // If password is correct
                 if(backgroundTask.isResult1() == true) {
                     email1 = txt_email_login.getText().toString();
                     Intent intent = new Intent(Login.this, MainPanel.class);
@@ -49,10 +53,10 @@ public class Login extends AppCompatActivity {
             }
         });
 
-        btn_rejestracja.setOnClickListener(new View.OnClickListener() {
+        btn_registration.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                //Changing view to registration panel
                 Intent intent = new Intent(Login.this, MainActivity.class);
                 startActivity(intent);
 

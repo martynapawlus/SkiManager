@@ -1,3 +1,5 @@
+// This class is responsible for registration
+
 package com.example.skimanager;
 
 import android.content.Intent;
@@ -13,7 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
     Button _btnReg, _btnLogin;
-    EditText _txtImie, _txtNazwisko, _txtUrodziny, _txtTelefon, _txtEmail, _txtHaslo;
+    EditText _txtName, _txtSurname, _txtBirthday, _txtPhone, _txtEmail, _txtPasswd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,24 +24,26 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         _btnLogin=(Button)findViewById(R.id.login_btn);
         _btnReg=(Button)findViewById(R.id.rejestracja_btn);
-        _txtImie=(EditText)findViewById(R.id.txt_imie);
-        _txtNazwisko=(EditText)findViewById(R.id.txt_nazwisko);
-        _txtUrodziny=(EditText)findViewById(R.id.txt_urodziny);
-        _txtTelefon=(EditText)findViewById(R.id.txt_telefon);
+        _txtName =(EditText)findViewById(R.id.txt_imie);
+        _txtSurname =(EditText)findViewById(R.id.txt_nazwisko);
+        _txtBirthday =(EditText)findViewById(R.id.txt_urodziny);
+        _txtPhone =(EditText)findViewById(R.id.txt_telefon);
         _txtEmail=(EditText)findViewById(R.id.txt_email);
-        _txtHaslo=(EditText)findViewById(R.id.txt_haslo);
+        _txtPasswd =(EditText)findViewById(R.id.txt_haslo);
         _btnReg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String imie=_txtImie.getText().toString();
-                String nazwisko=_txtNazwisko.getText().toString();
-                String urodziny=_txtUrodziny.getText().toString();
-                String telefon=_txtTelefon.getText().toString();
+                String first_name= _txtName.getText().toString();
+                String surname= _txtSurname.getText().toString();
+                String birthday= _txtBirthday.getText().toString();
+                String phone= _txtPhone.getText().toString();
                 String email=_txtEmail.getText().toString();
-                String haslo = Base64.encodeToString(_txtHaslo.getText().toString().getBytes(), Base64.DEFAULT);
+                // Password is hold as a hash in the database for obviously known reasons ;)
+                String password = Base64.encodeToString(_txtPasswd.getText().toString().getBytes(), Base64.DEFAULT);
+                // Connecting to the database and inserting new account
                 String type="reg";
                 BackgroundTask backgroundTask= new BackgroundTask(getApplicationContext());
-                backgroundTask.execute(type, imie, nazwisko, urodziny, telefon, email, haslo);
+                backgroundTask.execute(type, first_name, surname, birthday, phone, email, password);
 
             }
         });

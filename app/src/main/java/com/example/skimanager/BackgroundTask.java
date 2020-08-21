@@ -1,3 +1,9 @@
+/* This class is responsible for connecting to PHP files which are located on the server (35.198.175.92)
+It extends from AsyncTask which means that after calling execute method on BackgroundTask object
+onPreExecute(), doInBackground(Params...), onProgressUpdate(Progress...) and onPostExecute(Result) will
+execute in that exact order.
+*/
+
 package com.example.skimanager;
 
 import android.content.Context;
@@ -54,7 +60,7 @@ public class BackgroundTask extends AsyncTask<String, String, String>{
     @Override
     protected String doInBackground(String... strings) {
 
-
+        // URL addresses with PHP files located on the server
         String type=strings[0];
         String loginURL="http://35.198.175.92/ski_manager/login.php";
         String regURL="http://35.198.175.92/ski_manager/registration.php";
@@ -66,14 +72,64 @@ public class BackgroundTask extends AsyncTask<String, String, String>{
         String lessonCancelURL="http://35.198.175.92/ski_manager/lesson_cancel.php";
         String passwordChangeURL="http://35.198.175.92/ski_manager/password_change.php";
 
+        if(type.equals("login")) {
+            String email = strings[1];
+            String password = strings[2];
+            try {
+                URL url = new URL(loginURL);
+                try {
+                    // Connecting to the server using HTTP method
+                    HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                    httpURLConnection.setRequestMethod("POST");
+                    httpURLConnection.setDoOutput(true);
+                    httpURLConnection.setDoInput(true);
+                    OutputStream outputStream = httpURLConnection.getOutputStream();
+                    OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream, "UTF-8");
+                    BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
 
-        if(type.equals("reg")){
-            String imie= strings[1];
-            String nazwisko=strings[2];
-            String urodziny= strings[3];
-            String telefon=strings[4];
+                    // Encoding to UTF-8
+                    String login_data = URLEncoder.encode("email", "UTF-8") + "=" + URLEncoder.encode(email, "UTF-8") +
+                            "&" + URLEncoder.encode("password", "UTF-8") + "=" + URLEncoder.encode(password, "UTF-8");
+                    bufferedWriter.write(login_data);
+                    bufferedWriter.flush();
+                    bufferedWriter.close();
+                    InputStream inputStream = httpURLConnection.getInputStream();
+                    InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "ISO-8859-1");
+                    BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                    String result = "";
+                    String line = "";
+                    StringBuilder stringBuilder = new StringBuilder();
+
+                    // Writing incoming messages from the php codes results
+                    while ((line = bufferedReader.readLine()) != null) {
+                        stringBuilder.append(line).append("\n");
+
+                    }
+                    result = stringBuilder.toString();
+                    String res = new String("login success" + "\n");
+                    if (result.equals(res)) {
+                        result1 = true;
+                    }
+                    bufferedReader.close();
+                    inputStream.close();
+                    httpURLConnection.disconnect();
+                    return result;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+
+        // All else if's are similar to the previous one however, they are used to establish a connection
+        // with another file and encode a different amount of data
+        } else if(type.equals("reg")){
+            String name= strings[1];
+            String surname=strings[2];
+            String birthday= strings[3];
+            String phone=strings[4];
             String email=strings[5];
-            String haslo=strings[6];
+            String password=strings[6];
             try{
                 URL url= new URL(regURL);
                 try{
@@ -84,12 +140,12 @@ public class BackgroundTask extends AsyncTask<String, String, String>{
                     OutputStream outputStream= httpURLConnection.getOutputStream();
                     OutputStreamWriter outputStreamWriter= new OutputStreamWriter(outputStream, "UTF-8");
                     BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
-                    String insert_data = URLEncoder.encode("imie", "UTF-8")+"="+URLEncoder.encode(imie, "UTF-8")+
-                            "&"+URLEncoder.encode("nazwisko", "UTF-8")+"="+URLEncoder.encode(nazwisko, "UTF-8")+
-                            "&"+URLEncoder.encode("urodziny", "UTF-8")+"="+URLEncoder.encode(urodziny, "UTF-8")+
-                            "&"+URLEncoder.encode("telefon", "UTF-8")+"="+URLEncoder.encode(telefon, "UTF-8")+
+                    String insert_data = URLEncoder.encode("name", "UTF-8")+"="+URLEncoder.encode(name, "UTF-8")+
+                            "&"+URLEncoder.encode("surname", "UTF-8")+"="+URLEncoder.encode(surname, "UTF-8")+
+                            "&"+URLEncoder.encode("birthday", "UTF-8")+"="+URLEncoder.encode(birthday, "UTF-8")+
+                            "&"+URLEncoder.encode("phone", "UTF-8")+"="+URLEncoder.encode(phone, "UTF-8")+
                             "&"+URLEncoder.encode("email", "UTF-8")+"="+URLEncoder.encode(email, "UTF-8")+
-                            "&"+URLEncoder.encode("haslo", "UTF-8")+"="+URLEncoder.encode(haslo, "UTF-8");
+                            "&"+URLEncoder.encode("password", "UTF-8")+"="+URLEncoder.encode(password, "UTF-8");
                     bufferedWriter.write(insert_data);
                     bufferedWriter.flush();
                     bufferedWriter.close();
@@ -103,49 +159,6 @@ public class BackgroundTask extends AsyncTask<String, String, String>{
 
                     }
                     result=stringBuilder.toString();
-                    bufferedReader.close();
-                    inputStream.close();
-                    httpURLConnection.disconnect();
-                    return result;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-        } else if(type.equals("login")) {
-            String email_login = strings[1];
-            String haslo_login = strings[2];
-            try {
-                URL url = new URL(loginURL);
-                try {
-                    HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-                    httpURLConnection.setRequestMethod("POST");
-                    httpURLConnection.setDoOutput(true);
-                    httpURLConnection.setDoInput(true);
-                    OutputStream outputStream = httpURLConnection.getOutputStream();
-                    OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream, "UTF-8");
-                    BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
-                    String login_data = URLEncoder.encode("email", "UTF-8") + "=" + URLEncoder.encode(email_login, "UTF-8") +
-                            "&" + URLEncoder.encode("haslo", "UTF-8") + "=" + URLEncoder.encode(haslo_login, "UTF-8");
-                    bufferedWriter.write(login_data);
-                    bufferedWriter.flush();
-                    bufferedWriter.close();
-                    InputStream inputStream = httpURLConnection.getInputStream();
-                    InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "ISO-8859-1");
-                    BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                    String result = "";
-                    String line = "";
-                    StringBuilder stringBuilder = new StringBuilder();
-                    while ((line = bufferedReader.readLine()) != null) {
-                        stringBuilder.append(line).append("\n");
-
-                    }
-                    result = stringBuilder.toString();
-                    String res = new String("login success"+"\n");
-                    if(result.equals(res)){
-                        result1=true;
-                    }
                     bufferedReader.close();
                     inputStream.close();
                     httpURLConnection.disconnect();

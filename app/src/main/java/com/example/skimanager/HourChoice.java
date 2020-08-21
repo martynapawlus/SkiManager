@@ -1,3 +1,5 @@
+// This class is responsible for choosing when and where the lesson will be taken
+
 package com.example.skimanager;
 
 import android.os.Bundle;
@@ -21,6 +23,7 @@ public class HourChoice extends AppCompatActivity {
     private String[][] data;
     private ArrayList<String> hour = new ArrayList<String>();
 
+    // Method called each time user change choices about an hour
     public void refresh() {
         hour.clear();
         if (tmp_place.equals("Ośla Łączka")) {
@@ -96,6 +99,7 @@ public class HourChoice extends AppCompatActivity {
         tmp_hour = hour.get(0);
     }
 
+    // This method writes nicely where and when the lesson will take place just for confirmation
     public void refreshText() {
         System.out.println("odswiezamy");
         String u = Integer.toString(Integer.parseInt(tmp_hour.substring(0,tmp_hour.indexOf(":"))) + Integer.parseInt(tmp_quantity)) + ":00";
@@ -126,6 +130,7 @@ public class HourChoice extends AppCompatActivity {
         spinner_place.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                // Every time user choose different place
                 tmp_place = parent.getItemAtPosition(position).toString();
                 refresh();
                 refreshText();
@@ -147,6 +152,7 @@ public class HourChoice extends AppCompatActivity {
         spinner_quantity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                // Every time user choose different number of hours
                 tmp_quantity = parent.getItemAtPosition(position).toString();
                 refresh();
                 refreshText();
@@ -172,6 +178,7 @@ public class HourChoice extends AppCompatActivity {
         spinner_hour.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                // Every time user choose different time
                 tmp_hour = parent.getItemAtPosition(position).toString();
                 refreshText();
             }
@@ -185,6 +192,7 @@ public class HourChoice extends AppCompatActivity {
         btn_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Connecting to database and confirming the lesson
                 String type="lesson";
                 BackgroundTask backgroundTask= new BackgroundTask(getApplicationContext());
                 backgroundTask.execute(type, InstructorChoice.getTmp_instructor(), InstructorChoice.getTmp_year(), InstructorChoice.getTmp_month(), InstructorChoice.getTmp_day(), tmp_hour.substring(0,tmp_hour.indexOf(":")), tmp_quantity, Login.getEmail1());

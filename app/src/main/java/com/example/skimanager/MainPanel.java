@@ -1,3 +1,5 @@
+// This class is a main panel of the application
+
 package com.example.skimanager;
 
 import android.content.Intent;
@@ -8,7 +10,7 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainPanel extends AppCompatActivity {
-    Button btn_newLessons, btn_pastLessons, btn_ustawienia, btn_wyloguj, btn_futureLessons;
+    Button btn_newLessons, btn_pastLessons, btn_settings, btn_logOut, btn_futureLessons;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,9 +19,9 @@ public class MainPanel extends AppCompatActivity {
         btn_newLessons = findViewById(R.id.btn_noweLekcje);
         btn_pastLessons = findViewById(R.id.btn_zaleglelekcje);
         btn_futureLessons = findViewById(R.id.btn_przyszlelekcje);
-        btn_ustawienia = findViewById(R.id.btn_ustawienia);
-        btn_wyloguj = findViewById(R.id.btn_wyloguj);
-        btn_wyloguj.setOnClickListener(new View.OnClickListener() {
+        btn_settings = findViewById(R.id.btn_ustawienia);
+        btn_logOut = findViewById(R.id.btn_wyloguj);
+        btn_logOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainPanel.this, Login.class);
@@ -47,7 +49,7 @@ public class MainPanel extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        btn_ustawienia.setOnClickListener(new View.OnClickListener() {
+        btn_settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainPanel.this, Settings.class);
